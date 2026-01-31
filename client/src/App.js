@@ -24,7 +24,7 @@ function App() {
 
   const queryClient = new QueryClient();
 
-  const Layout = () => {
+  const Layout = () => {console.log('from app: ', currentUser)
     return (
       <QueryClientProvider client={queryClient}>
         <div className={`theme-${darkMode ? "dark" : "light"}`}>

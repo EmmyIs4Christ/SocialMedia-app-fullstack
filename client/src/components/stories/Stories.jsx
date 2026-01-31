@@ -28,7 +28,7 @@ const Stories = () => {
         ? "loading"
         : data.map((story) => (
             <div className="story" key={story.id}>
-              <img src={story.img} alt="" />
+              <img src={"/upload/" + story.img} alt="" />
               <span>{story.name}</span>
             </div>
           ))}

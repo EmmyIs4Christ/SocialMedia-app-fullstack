@@ -21,6 +21,7 @@ const Post = ({ post }) => {
 
   const { isLoading, error, data } = useQuery(["likes", post.id], () =>
     makeRequest.get("/likes?postId=" + post.id).then((res) => {
+      if (error) console.log(error);
       return res.data;
     })
   );
@@ -29,7 +30,7 @@ const Post = ({ post }) => {
 
   const mutation = useMutation(
     (liked) => {
-      if (liked) return makeRequest.delete("/likes?postId=" + post.id);
+      if (liked) return makeRequest.delete(`/likes?postId=${post.id}`);
       return makeRequest.post("/likes", { postId: post.id });
     },
     {

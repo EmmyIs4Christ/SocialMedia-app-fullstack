@@ -9,6 +9,8 @@ import likeRoutes from "./routes/likes.js";
 import commentRoutes from "./routes/comments.js";
 import authRoutes from "./routes/auth.js";
 import postRoutes from "./routes/posts.js";
+import relationshipsRoutes from './routes/relationships.js';
+import storiesRoutes from './routes/stories.js';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -28,7 +30,7 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:3000",
-    methods: "*", //Allows all methods
+    methods: ['GET', 'POST', 'PUT', "DELETE"],
     credentials: true,
   })
 );
@@ -38,11 +40,13 @@ app.use('/api/upload', upload.single('file'), (req, res, next) => {
 });
 app.use(cookieParser());
 app.use(express.json());
-app.use("/api/user", userRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/like", likeRoutes);
-app.use("/api/comment", commentRoutes);
+app.use("/api/likes", likeRoutes);
+app.use("/api/comments", commentRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/relationships", relationshipsRoutes);
+app.use('/api/stories', storiesRoutes);
 
 // LISTENING TO SERVER
 app.listen(8800, () => {

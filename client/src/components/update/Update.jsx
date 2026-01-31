@@ -8,11 +8,11 @@ const Update = ({ setOpenUpdate, user }) => {
   const [cover, setCover] = useState(null);
   const [profile, setProfile] = useState(null);
   const [texts, setTexts] = useState({
-    email: user.email,
-    password: user.password,
-    name: user.name,
-    city: user.city,
-    website: user.website,
+    email: user?.email,
+    password: user?.password,
+    name: user?.name,
+    city: user?.city,
+    website: user?.website,
   });
 
   const upload = async (file) => {
@@ -52,13 +52,14 @@ const Update = ({ setOpenUpdate, user }) => {
     
     let coverUrl;
     let profileUrl;
-    coverUrl = cover ? await upload(cover) : user.coverPic;
-    profileUrl = profile ? await upload(profile) : user.profilePic;
+    coverUrl = cover ? await upload(cover) : user?.coverPic;
+    profileUrl = profile ? await upload(profile) : user?.profilePic;
     
     mutation.mutate({ ...texts, coverPic: coverUrl, profilePic: profileUrl });
     setOpenUpdate(false);
     setCover(null);
     setProfile(null);
+  };
 
   return (
     <div className="update">
@@ -150,6 +151,5 @@ const Update = ({ setOpenUpdate, user }) => {
       </div>
     </div>
   )};
-};
 
 export default Update;

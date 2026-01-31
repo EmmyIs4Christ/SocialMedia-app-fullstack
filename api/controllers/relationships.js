@@ -1,43 +1,42 @@
 import jwt from "jsonwebtoken";
 import db from "../util/connection.js";
 
-export const getLikes = (req, res) => {
-  const sql = `SELECT * FROM likes WHERE postId = ?`;
-  db.query(sql, [req.query.postId], (err, likes) => {
+export const getRelationships = (req, res) => {
+  const sql = `SELECT followerUserId FROM relationships WHERE followedUserId = ?`;
+  db.query(sql, [req.query.followedUserId], (err, followers) => {
     if (err) return res.status(500).json("Query error " + err?.sqlMessage);
-    return res.status(200).json(likes.map((like) => like.userId));
+    return res.status(200).json(followers.map((follower) => follower.followerUserId));
   });
 };
 
-export const addLike = (req, res, next) => {
+export const addRelationship = (req, res, next) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in");
   jwt.verify(token, "secret-token", (err, verifiedToken) => {
     if (err) return res.status(403).json("Token is not valid");
     const userId = verifiedToken.id;
-    const sql = `INSERT INTO likes (userId, postId)
+    const sql = `INSERT INTO relationships (followerUserId, followedUserId)
                 VALUES (?, ?)`;
-    const postId = req.body.postId;
-    const values = [userId, postId];
-    db.query(sql, values, (err, likes) => {
+    const values = [userId, req.body.userId];
+    db.query(sql, values, (err, result) => {
       if (err) return res.status(500).json("Query error " + err?.sqlMessage);
-      return res.status(200).json("Post has been liked");
+      return res.status(200).json("Following");
     });
   });
 };
 
-export const deleteLike = (req, res, next) => {
+export const deleteRelationship = (req, res, next) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in");
-  const postId = req.query.postId;
+  const followedUserId = req.query.userId;
   jwt.verify(token, "secret-token", (err, verifiedToken) => {
     if (err) return res.status(403).json("Token is not valid");
     const userId = verifiedToken.id;
-    const sql = `DELETE FROM likes WHERE postId = ? AND userId = ?`;
-    const values = [postId, userId];
-    db.query(sql, values, (err, likes) => {
+    const sql = `DELETE FROM relationships WHERE followedUserId = ? AND followerUserId = ?`;
+    const values = [followedUserId, userId];
+    db.query(sql, values, (err, result) => {
       if (err) return res.status(500).json("Query error " + err?.sqlMessage);
-      return res.status(200).json("Post has been disliked");
+      return res.status(200).json("Unfollowed");
     });
   });
 };

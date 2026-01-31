@@ -20,7 +20,6 @@ import { useState } from "react";
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
-
   const userId = parseInt(useLocation().pathname.split("/")[2]);
 
   const { isLoading, error, data } = useQuery(["user"], () =>
@@ -38,7 +37,6 @@ const Profile = () => {
   );
 
   const queryClient = useQueryClient();
-
   const mutation = useMutation(
     (following) => {
       if (following)
@@ -64,8 +62,8 @@ const Profile = () => {
       ) : (
         <>
           <div className="images">
-            <img src={"/upload/"+data.coverPic} alt="" className="cover" />
-            <img src={"/upload/"+data.profilePic} alt="" className="profilePic" />
+            <img src={"/upload/"+data?.coverPic} alt="" className="cover" />
+            <img src={"/upload/"+data?.profilePic} alt="" className="profilePic" />
           </div>
           <div className="profileContainer">
             <div className="uInfo">
